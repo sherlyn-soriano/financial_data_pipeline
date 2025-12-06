@@ -23,7 +23,7 @@ def create_data_lake(name: str, resource_group_name: str, location: str):
         }
     )
 
-    bronze_container = azure_native.storage.BlobContainer(
+    bronze_container = azure_native.storage.BlobContainer(  # noqa: F841
         "bronze-container",
         account_name=storage_account.name,
         resource_group_name=resource_group_name,
