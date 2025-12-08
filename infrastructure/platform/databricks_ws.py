@@ -2,9 +2,15 @@ import pulumi
 import pulumi_azure_native as azure_native
 
 # check if standard starts capital C 
-def create_databricks_workspace(name: str, resource_group_name: str, location: str, sku: str = "Standard"):
+def create_databricks_workspace(
+    name: pulumi.Input[str],
+    resource_group_name: pulumi.Input[str],
+    location: pulumi.Input[str],
+    sku: str = "Standard",
+) -> azure_native.databricks.Workspace:
+    
     workspace = azure_native.databricks.Workspace(
-        name,
+        "databricks",
         workspace_name=name,
         resource_group_name=resource_group_name,
         location=location,
@@ -18,5 +24,4 @@ def create_databricks_workspace(name: str, resource_group_name: str, location: s
         },
     )
 
-    pulumi.log.info(f"Databricks Workspace created: {name}")
     return workspace

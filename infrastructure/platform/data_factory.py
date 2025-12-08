@@ -1,9 +1,14 @@
 import pulumi 
 import pulumi_azure_native as azure_native
 
-def create_data_factory(name: str, resource_group_name: str, location:str):
+def create_data_factory(
+    name: pulumi.Input[str],
+    resource_group_name: pulumi.Input[str],
+    location: pulumi.Input[str],
+) -> azure_native.datafactory.Factory:
+    
     factory = azure_native.datafactory.Factory(
-        name,
+        "data-factory",
         factory_name=name,
         resource_group_name=resource_group_name,
         location=location,
@@ -16,5 +21,5 @@ def create_data_factory(name: str, resource_group_name: str, location:str):
         }
 
     )
-    pulumi.log.info(f"Data Factory created: {name}")
+
     return factory

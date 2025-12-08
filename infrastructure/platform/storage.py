@@ -1,11 +1,15 @@
 import pulumi
 import pulumi_azure_native as azure_native
 
-def create_data_lake(name: str, resource_group_name: str, location: str):
+def create_data_lake(
+    name: pulumi.Input[str],
+    resource_group_name: pulumi.Input[str],
+    location: pulumi.Input[str],
+) -> azure_native.storage.StorageAccount:
     """Create Data Lake Storage Gen2 with herarchical namespace"""
 
     storage_account = azure_native.storage.StorageAccount(
-        name,
+        "storage",
         account_name=name,
         resource_group_name=resource_group_name,
         location=location,
@@ -23,7 +27,7 @@ def create_data_lake(name: str, resource_group_name: str, location: str):
         }
     )
 
-    bronze_container = azure_native.storage.BlobContainer(  # noqa: F841
+    bronze_container = azure_native.storage.BlobContainer(
         "bronze-container",
         account_name=storage_account.name,
         resource_group_name=resource_group_name,
