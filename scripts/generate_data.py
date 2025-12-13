@@ -1,11 +1,9 @@
-"""Generate realistic financial transaction data"""
+"""Generate financial transaction data"""
 
 import pandas as pd
 import numpy as np
 from faker import Faker
 import random
-from datetime import datetime, timedelta
-import os
 from pathlib import Path
 
 NUM_CUSTOMERS = 50000
@@ -171,7 +169,7 @@ def generate_transactions(customers_df, merchants_df, n=NUM_TRANSACTIONS):
     return pd.DataFrame(transactions)
 
 def main():
-    print("Credicorp Transaction Data Generator")
+    print("Transaction Data Generator")
 
     OUTPUT_DIR.mkdir(exist_ok=True)
     (OUTPUT_DIR / "transactions").mkdir(exist_ok=True)
@@ -180,7 +178,6 @@ def main():
     merchants = generate_merchants()
     transactions = generate_transactions(customers, merchants)
 
-    print("\nSaving data...")
     customers.to_csv(OUTPUT_DIR / 'customers.csv', index=False)
     print(f"Saved customers.csv ({len(customers):,} rows)")
 
@@ -191,7 +188,7 @@ def main():
         transactions['transaction_date']
     ).dt.to_period('M')
     
-    for period, group in transactions.groupby('year_month'): # check if this is okey
+    for period, group in transactions.groupby('year_month'):
         filename = OUTPUT_DIR / 'transactions' / f'transactions_{period}.csv'
         group.drop('year_month', axis=1).to_csv(filename, index=False)
         print(f"Saved {filename.name} ({len(group):,} rows)")
@@ -204,7 +201,7 @@ def main():
     print(f"Total Amount: S/{transactions['amount'].sum():,.2f}")
     print(f"Date Range: {transactions['transaction_date'].min()} to {transactions['transaction_date'].max()}")
     print("\nTransactions Status:")
-    print(transactions['status'].value_counts)
+    print(transactions['status'].value_counts())
     print("\nTransactions Types:")
     print(transactions['transaction_type'].value_counts())
 

@@ -1,6 +1,6 @@
-name: credicorp-de-platform
+name: finde
 runtime: python
-description: Credicorp Transaction Intelligence Platform - Complete Azure infraestructure 
+description: Financial Data Engineer project
 
 
 config:

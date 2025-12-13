@@ -1,4 +1,4 @@
 config:
-  credicorp-de-platform:enviroment: dev
-  credicorp-de-platform:project_name: credicorp-de
+  credicorp-de-platform:environment: dev
+  credicorp-de-platform:project_name: finde
   azure-native:location: eastus2
