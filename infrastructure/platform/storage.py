@@ -1,3 +1,4 @@
+from typing import Optional
 import pulumi
 import pulumi_azure_native as azure_native
 
@@ -5,8 +6,16 @@ def create_data_lake(
     name: pulumi.Input[str],
     resource_group_name: pulumi.Input[str],
     location: pulumi.Input[str],
+    tags: Optional[dict] = None
 ) -> azure_native.storage.StorageAccount:
-    """Create Data Lake Storage Gen2 with herarchical namespace"""
+    """Create Data Lake Storage Gen2 with hierarchical namespace"""
+
+    storage_tags = {
+        "Purpose":"DataLake",
+        "Layer":"Storage"
+    }
+    if tags:
+        storage_tags.update(tags)
 
     storage_account = azure_native.storage.StorageAccount(
         "storage",
@@ -21,10 +30,7 @@ def create_data_lake(
         enable_https_traffic_only=True,
         minimum_tls_version=azure_native.storage.MinimumTlsVersion.TLS1_2,
         allow_blob_public_access=False,
-        tags={
-            "Purpose":"DataLake",
-            "Layer": "Storage"
-        }
+        tags = storage_tags
     )
 
     bronze_container = azure_native.storage.BlobContainer(
@@ -37,7 +43,7 @@ def create_data_lake(
 
     silver_container = azure_native.storage.BlobContainer(
         "silver-container",
-        account_name= storage_account.name,
+        account_name=storage_account.name,
         resource_group_name=resource_group_name,
         container_name="silver",
         public_access=azure_native.storage.PublicAccess.NONE
@@ -53,8 +59,8 @@ def create_data_lake(
 
     lifecycle_policy = azure_native.storage.ManagementPolicy(
         "lifecycle-policy",
-        account_name = storage_account.name,
-        resource_group_name = resource_group_name,
+        account_name=storage_account.name,
+        resource_group_name=resource_group_name,
         policy=azure_native.storage.ManagementPolicySchemaArgs(
             rules=[
                 azure_native.storage.ManagementPolicyRuleArgs(

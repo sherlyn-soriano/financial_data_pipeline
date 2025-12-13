@@ -1,3 +1,4 @@
+from typing import Optional
 import pulumi
 import pulumi_azure_native as azure_native
 import pulumi_azuread as azuread
@@ -6,7 +7,15 @@ def create_key_vault(
     name: pulumi.Input[str],
     resource_group_name: pulumi.Input[str],
     location: pulumi.Input[str],
+    tags: Optional[dict] = None 
 ) -> azure_native.keyvault.Vault:
+    
+    kv_tags = {
+        "Purpose":"SecretManagement",
+        "Layer":"Security"
+    }
+    if tags:
+        kv_tags.update(tags)
     
     current = azuread.get_client_config()
     key_vault = azure_native.keyvault.Vault(
@@ -38,10 +47,7 @@ def create_key_vault(
             soft_delete_retention_in_days=90,
             enable_purge_protection=False,
         ),
-        tags={
-            "Purpose":"SecretManagement",
-            "Layer":"Security"
-        }
+        tags=kv_tags
     )
 
     return key_vault
